@@ -1,0 +1,16 @@
+* text=auto
+*.cs diff=csharp
+*.cshtml text
+*.json text
+*.md text
+*.xml text
+*.yml text
+*.yaml text
+*.css text
+*.js text
+*.map binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

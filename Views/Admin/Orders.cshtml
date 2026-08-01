@@ -1,0 +1,32 @@
+@model IEnumerable<AirportWebApp.Models.Booking.Order>
+
+@{
+    ViewData["Title"] = "Órdenes";
+}
+
+<h1>Órdenes</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Detalles</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model)
+    {
+        <tr>
+            <td>@order.Id</td>
+            <td>@order.UserId</td>
+            <td>@order.OrderDate.ToString("g")</td>
+            <td>$@order.TotalAmount</td>
+            <td>@order.Status</td>
+            <td>@order.OrderDetails.Count</td>
+        </tr>
+    }
+    </tbody>
+</table>

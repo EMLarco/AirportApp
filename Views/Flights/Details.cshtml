@@ -1,0 +1,86 @@
+@model flight
+
+@{
+    ViewData["Title"] = "Detalles del vuelo";
+    var flightRoute = ViewBag.Route as route;
+    var airplane = ViewBag.Airplane as airplane;
+    var airports = ViewBag.Airports as Dictionary<string, airport> ?? new Dictionary<string, airport>();
+    airports.TryGetValue(flightRoute?.departure_airport ?? "", out var depAirport);
+    airports.TryGetValue(flightRoute?.arrival_airport ?? "", out var arrAirport);
+    var scheduled = Model.status == "Scheduled";
+}
+
+<div class="d-flex align-items-center mb-4 section-title">
+    <i class="fa-solid fa-circle-info me-2 fs-3"></i>
+    <h2 class="mb-0">Detalles del vuelo</h2>
+</div>
+
+<div class="card app-card mb-4">
+    <div class="card-body p-4">
+        <div class="timeline mb-4">
+            <div class="tl-point">
+                <div class="tl-dot"><i class="fa-solid fa-plane-departure"></i></div>
+                <div class="fw-bold">@(depAirport?.airport_name ?? flightRoute?.departure_airport ?? "-")</div>
+                <div class="small text-muted">@(depAirport?.city ?? "") @(flightRoute?.departure_airport ?? "")</div>
+                <div class="fw-semibold mt-1">@Model.scheduled_departure.ToString("dd/MM/yyyy HH:mm")</div>
+            </div>
+            <div class="tl-line">
+                <i class="fa-solid fa-plane"></i>
+            </div>
+            <div class="tl-point">
+                <div class="tl-dot"><i class="fa-solid fa-plane-arrival"></i></div>
+                <div class="fw-bold">@(arrAirport?.airport_name ?? flightRoute?.arrival_airport ?? "-")</div>
+                <div class="small text-muted">@(arrAirport?.city ?? "") @(flightRoute?.arrival_airport ?? "")</div>
+                <div class="fw-semibold mt-1">@Model.scheduled_arrival.ToString("dd/MM/yyyy HH:mm")</div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100">
+                    <h6 class="text-muted text-uppercase small mb-2"><i class="fa-solid fa-plane me-1"></i>Vuelo</h6>
+                    <div class="fs-4 fw-bold flight-route-code">@Model.route_no</div>
+                    <div class="mt-1">
+                        @if (scheduled)
+                        {
+                            <span class="status-badge status-scheduled"><i class="fa-solid fa-circle-check"></i>Programado</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-other"><i class="fa-solid fa-circle-exclamation"></i>@Model.status</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100">
+                    <h6 class="text-muted text-uppercase small mb-2"><i class="fa-solid fa-jet-fighter me-1"></i>Aeronave</h6>
+                    @if (airplane != null)
+                    {
+                        <div class="fs-5 fw-semibold">@airplane.airplane_code - @airplane.model</div>
+                        <div class="small text-muted">
+                            <i class="fa-solid fa-gauge-high me-1"></i>@airplane.speed km/h
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-route me-1"></i>Rango @airplane.range km
+                        </div>
+                    }
+                    else if (flightRoute != null)
+                    {
+                        <div class="fs-5 fw-semibold">@flightRoute.airplane_code</div>
+                    }
+                    else
+                    {
+                        <div class="text-muted">-</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Seats" asp-route-flightId="@Model.flight_id" class="btn btn-primary btn-lg">
+    <i class="fa-solid fa-chair me-2"></i>Ver asientos disponibles
+</a>
+<a asp-action="Index" class="btn btn-secondary btn-lg">
+    <i class="fa-solid fa-arrow-left me-2"></i>Volver a vuelos
+</a>

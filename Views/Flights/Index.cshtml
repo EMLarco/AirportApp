@@ -1,0 +1,162 @@
+@model List<flight>
+
+@{
+    ViewData["Title"] = "Vuelos";
+    var routes = ViewBag.Routes as Dictionary<string, route> ?? new Dictionary<string, route>();
+    var airports = ViewBag.Airports as Dictionary<string, airport> ?? new Dictionary<string, airport>();
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+    var totalPages = ViewBag.TotalPages as int? ?? 1;
+    var window = 2;
+    var pageNumbers = new List<int> { 1 };
+    for (var i = currentPage - window; i <= currentPage + window; i++)
+    {
+        if (i > 1 && i < totalPages) pageNumbers.Add(i);
+    }
+    pageNumbers.Add(totalPages);
+    pageNumbers = pageNumbers.Distinct().OrderBy(p => p).ToList();
+    int? prev = null;
+    string PageUrl(int p) => Url.Action("Index", new { origin = ViewBag.Origin, destination = ViewBag.Destination, date = ViewBag.Date, page = p, pageSize = ViewBag.PageSize }) ?? "/Flights";
+}
+
+<div class="d-flex align-items-center mb-3 section-title">
+    <i class="fa-solid fa-plane me-2 fs-3"></i>
+    <h2 class="mb-0">Vuelos disponibles</h2>
+</div>
+
+<form method="get" class="row g-2 mb-4 app-card p-3">
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+            <input type="text" name="origin" class="form-control" placeholder="Origen (ej. LED)" value="@ViewBag.Origin" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-location-arrow"></i></span>
+            <input type="text" name="destination" class="form-control" placeholder="Destino (ej. UFA)" value="@ViewBag.Destination" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+            <input type="date" name="date" class="form-control" value="@ViewBag.Date" />
+        </div>
+    </div>
+    <div class="col-md-3 d-grid">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-magnifying-glass me-1"></i> Buscar
+        </button>
+    </div>
+</form>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        <i class="fa-solid fa-circle-info me-2"></i>No se encontraron vuelos con los filtros aplicados.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover table-flight align-middle">
+            <thead>
+                <tr>
+                    <th><i class="fa-solid fa-plane me-1"></i>Vuelo</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th><i class="fa-solid fa-clock me-1"></i>Salida</th>
+                    <th><i class="fa-solid fa-clock me-1"></i>Llegada</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var flight in Model)
+                {
+                    routes.TryGetValue(flight.route_no, out var flightRoute);
+                    airports.TryGetValue(flightRoute?.departure_airport ?? "", out var depAirport);
+                    airports.TryGetValue(flightRoute?.arrival_airport ?? "", out var arrAirport);
+                    var scheduled = flight.status == "Scheduled";
+                    <tr>
+                        <td><span class="flight-route-code">@flight.route_no</span></td>
+                        <td>
+                            <div class="fw-semibold">@(depAirport?.airport_name ?? flightRoute?.departure_airport ?? "-")</div>
+                            <div class="small text-muted"><i class="fa-solid fa-location-dot me-1"></i>@(flightRoute?.departure_airport ?? "-")</div>
+                        </td>
+                        <td>
+                            <div class="fw-semibold">@(arrAirport?.airport_name ?? flightRoute?.arrival_airport ?? "-")</div>
+                            <div class="small text-muted"><i class="fa-solid fa-location-arrow me-1"></i>@(flightRoute?.arrival_airport ?? "-")</div>
+                        </td>
+                        <td>@flight.scheduled_departure.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@flight.scheduled_arrival.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            @if (scheduled)
+                            {
+                                <span class="status-badge status-scheduled"><i class="fa-solid fa-circle-check"></i>Programado</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-other"><i class="fa-solid fa-circle-exclamation"></i>@flight.status</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@flight.flight_id" class="btn btn-sm btn-sky">
+                                <i class="fa-solid fa-circle-info me-1"></i>Detalles
+                            </a>
+                            <a asp-action="Seats" asp-route-flightId="@flight.flight_id" class="btn btn-sm btn-outline-success">
+                                <i class="fa-solid fa-chair me-1"></i>Asientos
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    
+
+    <nav aria-label="Paginación" class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        @if (totalPages > 1)
+        {
+            <ul class="pagination mb-0">
+                <li class='page-item @(currentPage <= 1 ? "disabled" : "")'>
+                    <a class="page-link" href="@PageUrl(currentPage - 1)" aria-label="Anterior">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </li>
+                
+                @foreach (var p in pageNumbers)
+                {
+                    if (prev != null && p - prev > 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                    <li class='page-item @(p == currentPage ? "active" : "")'>
+                        <a class="page-link" href="@PageUrl(p)">@p</a>
+                    </li>
+                    prev = p;
+                }
+                <li class='page-item @(currentPage >= totalPages ? "disabled" : "")'>
+                    <a class="page-link" href="@PageUrl(currentPage + 1)" aria-label="Siguiente">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        }
+
+        <form method="get" class="d-flex align-items-center gap-2">
+            <input type="hidden" name="origin" value="@ViewBag.Origin" />
+            <input type="hidden" name="destination" value="@ViewBag.Destination" />
+            <input type="hidden" name="date" value="@ViewBag.Date" />
+            <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+            <label for="gotoPage" class="text-muted small mb-0">Ir a la página</label>
+            <input type="number" id="gotoPage" name="page" min="1" max="@totalPages" value="@currentPage" class="form-control form-control-sm jump-page" />
+            <button type="submit" class="btn btn-sm btn-sky" title="Ir">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+        </form>
+    </nav>
+    <p class="text-muted">
+        <i class="fa-solid fa-route me-1"></i>Total: @ViewBag.Total vuelos
+    </p>
+}

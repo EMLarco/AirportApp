@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Pago fallido";
+}
+
+<div class="text-center mb-4">
+    <i class="fa-solid fa-circle-xmark text-danger result-icon"></i>
+    <h2 class="mt-3">El pago no fue completado</h2>
+    <p class="lead text-muted">Ocurrió un problema al procesar tu pago. Tu reserva no fue confirmada.</p>
+    @if (ViewBag.Error != null)
+    {
+        <p class="small text-muted">@ViewBag.Error</p>
+    }
+</div>
+
+<div class="text-center">
+    <a asp-action="Index" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-magnifying-glass me-2"></i>Buscar vuelos
+    </a>
+</div>

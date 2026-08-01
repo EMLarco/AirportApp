@@ -1,0 +1,35 @@
+@using Microsoft.AspNetCore.Identity
+@using AirportWebApp.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Administrar cuenta">
+            <i class="fa-solid fa-circle-user me-1"></i>Hola, @User.Identity?.Name!
+        </a>
+    </li>
+    <li class="nav-item">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+            <button type="submit" class="nav-link btn btn-link">
+                <i class="fa-solid fa-right-from-bracket me-1"></i>Salir
+            </button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">
+            <i class="fa-solid fa-user-plus me-1"></i>Registrarse
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">
+            <i class="fa-solid fa-right-to-bracket me-1"></i>Iniciar sesión
+        </a>
+    </li>
+}
+</ul>

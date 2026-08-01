@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="app-hero p-4 p-md-5 mb-4">
+    <div class="row align-items-center position-relative">
+        <div class="col-lg-7">
+            <h1 class="display-5 fw-bold mb-3">
+                <i class="fa-solid fa-plane hero-plane me-2"></i>
+                Encuentra tu próximo vuelo
+            </h1>
+            <p class="lead mb-4 text-white-50">
+                Consulta vuelos disponibles, elige tu asiento y paga de forma segura con PayPal.
+            </p>
+            <form method="get" asp-controller="Flights" asp-action="Index" class="row g-2">
+                <div class="col-md-4">
+                    <input type="text" name="origin" class="form-control form-control-lg" placeholder="Origen (ej. LED)" />
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="destination" class="form-control form-control-lg" placeholder="Destino (ej. UFA)" />
+                </div>
+                <div class="col-md-4 d-grid">
+                    <button type="submit" class="btn btn-sky btn-lg">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i>Buscar vuelos
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block text-center position-relative">
+            <i class="fa-solid fa-plane-up hero-plane"></i>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card app-card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3"><i class="fa-solid fa-plane-departure"></i></div>
+                <h5 class="card-title">Vuelos disponibles</h5>
+                <p class="card-text text-muted">Explora vuelos programados con horarios de salida y llegada actualizados.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card app-card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3"><i class="fa-solid fa-chair"></i></div>
+                <h5 class="card-title">Elige tu asiento</h5>
+                <p class="card-text text-muted">Selecciona tu asiento favorito en Economy, Comfort o Business.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card app-card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3"><i class="fa-brands fa-paypal"></i></div>
+                <h5 class="card-title">Pago seguro</h5>
+                <p class="card-text text-muted">Completa tu reserva con PayPal de forma rápida y segura (sandbox).</p>
+            </div>
+        </div>
+    </div>
+</div>

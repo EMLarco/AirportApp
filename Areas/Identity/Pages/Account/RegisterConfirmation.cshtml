@@ -1,0 +1,17 @@
+@page
+@model Microsoft.AspNetCore.Mvc.RazorPages.PageModel
+@{
+    ViewData["Title"] = "Registro completado";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card app-card auth-card">
+            <div class="card-body text-center">
+                <h2 class="mb-3">Cuenta creada</h2>
+                <p class="text-muted">Gracias por registrarte. Revisa tu correo si es necesario confirmar la cuenta.</p>
+                <a asp-page="/Account/Login" asp-area="Identity" class="btn btn-sky">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
+</div>

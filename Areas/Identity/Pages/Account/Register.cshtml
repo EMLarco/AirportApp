@@ -1,0 +1,67 @@
+@page
+@model AirportWebApp.Areas.Identity.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card app-card auth-card">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="auth-icon mb-3"><i class="fa-solid fa-user-plus"></i></div>
+                    <h2 class="mb-1">Crear cuenta</h2>
+                    <p class="text-muted mb-0">Regístrate para reservar asientos y pagar con PayPal</p>
+                </div>
+
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="nombre@ejemplo.com" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Repite la contraseña" />
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button id="registerSubmit" type="submit" class="btn btn-sky btn-lg">
+                            <i class="fa-solid fa-user-plus me-2"></i>Registrarse
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p class="mb-0">
+                            ¿Ya tienes cuenta?
+                            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl"><i class="fa-solid fa-right-to-bracket me-1"></i>Inicia sesión</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

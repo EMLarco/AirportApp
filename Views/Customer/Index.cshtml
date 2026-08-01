@@ -1,0 +1,88 @@
+@model AirportWebApp.Models.Booking.CustomerOperationsViewModel
+
+@{
+    ViewData["Title"] = "Mis Operaciones";
+}
+
+<h1>Mis Operaciones</h1>
+
+<div class="mb-4">
+    <h2>Reservas</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Vuelo</th>
+                <th>Asiento</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var reservation in Model.Reservations)
+        {
+            <tr>
+                <td>@reservation.Id</td>
+                <td>@reservation.Flight.route_no</td>
+                <td>@reservation.SeatNo</td>
+                <td>$@reservation.Price</td>
+                <td>@(reservation.IsPaid ? "Pagado" : "Pendiente")</td>
+                <td>@reservation.ReservationTime.ToString("g")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div class="mb-4">
+    <h2>Órdenes</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>$@order.TotalAmount</td>
+                <td>@order.Status</td>
+                <td>@order.OrderDate.ToString("g")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h2>Pagos</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Orden</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var payment in Model.Payments)
+        {
+            <tr>
+                <td>@payment.Id</td>
+                <td>@payment.OrderId</td>
+                <td>$@payment.Amount</td>
+                <td>@payment.Status</td>
+                <td>@payment.CreationDate.ToString("g")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

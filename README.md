@@ -122,7 +122,7 @@ Luego abre `https://localhost:5001` o la URL indicada por la aplicación.
 ## Usuario administrador inicial
 
 - Email: `admin@airportwebapp.local`
-- Contraseña: `Admin123!`
+- Contraseña: `set the admin password via User Secrets`
 
 ## Migraciones
 
